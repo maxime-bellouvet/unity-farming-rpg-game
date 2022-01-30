@@ -2,6 +2,11 @@
 
 public static class Settings
 {
+    // obscuring item fading
+    public const float fadeInSeconds = .25f;
+    public const float fadeOutSeconds = .35f;
+    public const float targetAlpha = .45f;
+
     // player movement
     public const float runningSpeed = 5.333f;
     public const float walkingSpeed = 2.666f;
