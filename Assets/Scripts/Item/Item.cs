@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+    [ItemCodeDescription]
     [SerializeField]
     private int _itemCode;
     private SpriteRenderer spriteRenderer;
@@ -26,5 +24,18 @@ public class Item : MonoBehaviour
 
     private void Init(int itemCode)
     {
+        if(itemCode != 0)
+        {
+            ItemCode = itemCode;
+
+            ItemDetails itemDetails = InventoryManager.Instance.GetItemDetails(ItemCode);
+
+            spriteRenderer.sprite = itemDetails.itemSprite;
+
+            if(itemDetails.itemType == ItemType.ReapableScenary)
+            {
+                gameObject.AddComponent<ItemNudge>();
+            }
+        }
     }
 }
