@@ -36,11 +36,15 @@ public class Player : SingletonMonobehaviour<Player>
 
     private bool PlayerInputIsDisabled { get { return _playerInputIsDisabled; } set { _playerInputIsDisabled = value; } }
 
+    private Camera mainCamera;
+
     protected override void Awake()
     {
         base.Awake();
 
         rb = GetComponent<Rigidbody2D>();
+
+        mainCamera = Camera.main;
     }
 
     private void Update()
@@ -151,5 +155,10 @@ public class Player : SingletonMonobehaviour<Player>
         isSwingingToolUp = false;
         isSwingingToolDown = false;
         toolEffect = ToolEffect.none;
+    }
+
+    public Vector3 GetPlayerViewportPosition()
+    {
+        return mainCamera.WorldToViewportPoint(transform.position);
     }
 }
