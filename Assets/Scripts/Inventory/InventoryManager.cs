@@ -58,6 +58,20 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
         EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
     }
 
+    internal void SwapInventoryItems(InventoryLocation inventoryLocation, int fromItem, int toItem)
+    {
+        if (fromItem < inventoryLists[(int)inventoryLocation].Count && toItem < inventoryLists[(int)inventoryLocation].Count && fromItem!=toItem && fromItem >= 0 && toItem >= 0)
+        {
+            InventoryItem fromInventoryItem = inventoryLists[(int)inventoryLocation][fromItem];
+            InventoryItem toInventoryItem = inventoryLists[(int)inventoryLocation][toItem];
+
+            inventoryLists[(int)inventoryLocation][toItem] = fromInventoryItem;
+            inventoryLists[(int)inventoryLocation][fromItem] = toInventoryItem;
+
+            EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
+        }
+    }
+
     /// <summary>
     /// Adds an item to the inventory list for the inventoryLocation and then destroys the game object to delete
     /// </summary>
@@ -90,6 +104,36 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
         }
 
         return -1;
+    }
+
+    internal void RemoveItem(InventoryLocation inventoryLocation, int itemCode)
+    {
+        List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
+        int itemPosition = FindItemInInventory(inventoryLocation, itemCode);
+
+        if(itemPosition != -1)
+        {
+            RemoveItemAtPosition(inventoryList, itemCode, itemPosition);
+        }
+
+        EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryList);
+    }
+
+    private void RemoveItemAtPosition(List<InventoryItem> inventoryList, int itemCode, int itemPosition)
+    {
+        InventoryItem inventoryItem = new InventoryItem();
+        int quantity = inventoryList[itemPosition].itemQuantity - 1;
+
+        if(quantity > 0)
+        {
+            inventoryItem.itemQuantity = quantity;
+            inventoryItem.itemCode = itemCode;
+            inventoryList[itemPosition] = inventoryItem;
+        }
+        else
+        {
+            inventoryList.RemoveAt(itemPosition);
+        }
     }
 
     private void AddItemAtPosition(List<InventoryItem> inventoryList, int itemCode)
